@@ -1,0 +1,28 @@
+# LIVE: paid OpenRouter calls. 300 prompts (200 open-ended, 100 multiple choice), all answered by
+# the small model and all checked against the reference. Judge gives content and format verdicts.
+name: live-300
+mode: live
+seed: 1
+spend_cap_usd: 2.60
+max_tokens: 1024
+workers: 8
+models:
+  small: qwen/qwen3-30b-a3b-instruct-2507   # $0.048 / $0.193 per M tokens
+  large: anthropic/claude-sonnet-5.5        # $2 / $10   (reference)
+  judge: google/gemini-3.6-flash            # $0.75 / $3.75 (reasoning can't be disabled)
+judge_reasoning: low
+judge_max_tokens: 1536
+dataset:
+  mix:
+    grade-school-math: 60
+    mbpp: 40
+    consensus_summary: 30
+    mtbench: 30
+    abstract2title: 20
+    bias_detection: 20
+    _multiple_choice: 100
+policy:
+  kind: always_small
+shadow:
+  mode: uniform
+  rate: 1.0

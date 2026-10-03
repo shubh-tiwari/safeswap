@@ -1,0 +1,18 @@
+# Offline smoke: a segment-prior router (Mixtral when it usually holds up, else GPT-4),
+# 3% uniform shadowing, labels from RouterBench task scores. No API calls.
+name: smoke
+mode: offline
+seed: 0
+models:
+  small: mistralai/mixtral-8x7b-chat
+  large: gpt-4-1106-preview
+dataset:
+  n: 20000
+  calib_frac: 0.2
+policy:
+  kind: segment_prior
+  threshold: 0.9
+shadow:
+  mode: uniform
+  rate: 0.03
+delta: 0.05

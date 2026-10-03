@@ -1,0 +1,20 @@
+# LIVE pilot: paid OpenRouter calls. Needs OPENROUTER_API_KEY in .env.
+# 50 prompts, all served by the small model and all checked against the reference.
+name: live-pilot
+mode: live
+seed: 0
+spend_cap_usd: 0.45
+max_tokens: 512
+models:
+  small: qwen/qwen3-30b-a3b-instruct-2507   # $0.048 / $0.193 per M tokens
+  large: anthropic/claude-sonnet-5.5        # $2 / $10   (reference)
+  judge: google/gemini-3.6-flash            # $0.75 / $3.75 (reasoning can't be disabled)
+judge_reasoning: low
+judge_max_tokens: 1024
+dataset:
+  n: 50
+policy:
+  kind: always_small
+shadow:
+  mode: uniform
+  rate: 1.0
