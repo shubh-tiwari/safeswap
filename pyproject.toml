@@ -3,6 +3,7 @@ name = "safeswap"
 version = "0.0.1"
 description = "Measure what a cost change (model swap, router, cache) costs in quality, on live traffic, with confidence intervals."
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.10"
 authors = [{ name = "Shubham Tiwari" }]
 dependencies = [
