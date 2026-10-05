@@ -1,0 +1,7 @@
+# Decision policy for `safeswap replay --policy examples/policy.yaml`.
+decision:
+  max_quality_drop_pp: 1.0        # ship only if the CI lower bound is above -1.0 pp
+  min_samples: 200                # fewer pairs -> hold (raise to ~1000 for real migrations)
+  block_if_any_slice_drop_pp: 5.0 # a slice this much worse, and significant, blocks a full ship
+  min_slice_size: 30              # smaller slices are shown but never flagged
+  fdr_q: 0.1                      # false discovery rate across slices

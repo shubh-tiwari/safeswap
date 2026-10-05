@@ -6,7 +6,7 @@ always-small error and cost, and the oracle (cheapest model that is not worse) s
 
 import pandas as pd
 
-from safeswap.data import load_routerbench, routerbench_models
+from safeswap.data.routerbench import load_routerbench, routerbench_models
 
 LARGE = "gpt-4-1106-preview"
 

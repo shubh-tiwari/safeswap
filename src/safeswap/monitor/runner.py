@@ -24,10 +24,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from . import sampler as smp
-from .backends import OpenRouter
-from .judge import LLMJudge
-from .policies import Decision
+from safeswap.llm.client import OpenRouter
+from safeswap.routing.policies import Decision
+from safeswap.scoring.judge import LLMJudge
+from safeswap.stats import sampler as smp
 
 
 def sampling_probs(decision: Decision, large: str, cfg: dict) -> np.ndarray:
@@ -98,7 +98,7 @@ def run_live(
     """
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    from .backends import SpendCapExceeded
+    from safeswap.llm.client import SpendCapExceeded
 
     rng = np.random.default_rng(seed)
     p = sampling_probs(decision, large, shadow)

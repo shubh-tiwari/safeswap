@@ -1,6 +1,6 @@
 import numpy as np
 
-from safeswap import calibrate
+from safeswap.stats import calibrate
 
 
 def _losses(n, risks, rng):

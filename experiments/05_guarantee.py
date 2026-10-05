@@ -12,8 +12,9 @@ import argparse
 import numpy as np
 import pandas as pd
 
-from safeswap import calibrate, policies
-from safeswap.data import load_routerbench
+from safeswap.data.routerbench import load_routerbench
+from safeswap.routing import policies
+from safeswap.stats import calibrate
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--reps", type=int, default=500)

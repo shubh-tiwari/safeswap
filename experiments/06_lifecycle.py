@@ -16,8 +16,9 @@ import argparse
 import numpy as np
 import pandas as pd
 
-from safeswap import calibrate, drift, policies
-from safeswap.data import load_routerbench
+from safeswap.data.routerbench import load_routerbench
+from safeswap.routing import policies
+from safeswap.stats import calibrate, drift
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--runs", type=int, default=200)

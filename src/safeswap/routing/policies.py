@@ -97,7 +97,7 @@ class LearnedGate:
     def fit(self, calib: pd.DataFrame) -> LearnedGate:
         from sklearn.linear_model import LogisticRegression
 
-        from . import features
+        from safeswap.routing import features
 
         self.feat = features.make(self.features_kind)
         x = self.feat.fit_transform(calib["prompt"])

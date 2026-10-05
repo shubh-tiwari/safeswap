@@ -16,9 +16,10 @@ import argparse
 import numpy as np
 import pandas as pd
 
-from safeswap import drift, policies
-from safeswap.data import load_routerbench
-from safeswap.features import Embed
+from safeswap.data.routerbench import load_routerbench
+from safeswap.routing import policies
+from safeswap.routing.features import Embed
+from safeswap.stats import drift
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--sims", type=int, default=200)

@@ -19,7 +19,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from .backends import OpenRouter
+from safeswap.llm.client import OpenRouter
 
 PROMPT = """You are comparing two answers to the same request.
 
@@ -51,6 +51,16 @@ FORMAT: A, B or TIE"""
 
 _CONTENT = re.compile(r"CONTENT:\s*\**\s*(A|B|TIE)\b", re.IGNORECASE)
 _FORMAT = re.compile(r"FORMAT:\s*\**\s*(A|B|TIE)\b", re.IGNORECASE)
+
+
+@dataclass
+class Outcome:
+    """Pairwise result for a candidate against a baseline answer, both orders agreed or tie."""
+
+    content: str  # win | tie | loss, from the candidate's side
+    format: str
+    cost_usd: float = 0.0
+    detail: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -112,6 +122,37 @@ class LLMJudge:
                 "format1": f1,
                 "format2": f2,
                 "format_worse": self._worse(f1, f2),
+                "consistent": (v1, v2) in {("A", "B"), ("B", "A"), ("TIE", "TIE")},
+                "parsed": "PARSE_FAIL" not in (v1, v2, f1, f2),
+            },
+        )
+
+    def compare(self, request: str, candidate: str, baseline: str) -> Outcome:
+        """Win / tie / loss for the candidate. Same calls (and order) as `label`, so cached
+        judgements are reused. A win or loss needs both orders to agree; otherwise it's a tie."""
+        if candidate.strip() == baseline.strip():
+            return Outcome(
+                "tie", "tie", 0.0, {"identical": True, "parsed": True, "consistent": True}
+            )
+        v1, f1, c1 = self._ask(request, candidate, baseline)  # candidate is A
+        v2, f2, c2 = self._ask(request, baseline, candidate)  # candidate is B
+
+        def outcome(x1: str, x2: str) -> str:
+            if x1 == "A" and x2 == "B":
+                return "win"
+            if x1 == "B" and x2 == "A":
+                return "loss"
+            return "tie"
+
+        return Outcome(
+            outcome(v1, v2),
+            outcome(f1, f2),
+            c1 + c2,
+            {
+                "order1": v1,
+                "order2": v2,
+                "format1": f1,
+                "format2": f2,
                 "consistent": (v1, v2) in {("A", "B"), ("B", "A"), ("TIE", "TIE")},
                 "parsed": "PARSE_FAIL" not in (v1, v2, f1, f2),
             },

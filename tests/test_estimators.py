@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 from scipy import stats
 
-from safeswap import estimators as est
-from safeswap import sampler
+from safeswap.stats import estimators as est
+from safeswap.stats import sampler
 
 
 def population(n=20_000, base=0.03, seed=0):
@@ -121,7 +121,7 @@ def test_census_stratum_does_not_shrink_interval():
 def test_learned_gate_learns_a_text_signal():
     import pandas as pd
 
-    from safeswap.policies import LearnedGate
+    from safeswap.routing.policies import LearnedGate
 
     rng = np.random.default_rng(5)
     n = 2000
@@ -143,7 +143,7 @@ def test_learned_gate_learns_a_text_signal():
 def test_fully_checked_cheap_answers_still_get_an_interval():
     import pandas as pd
 
-    from safeswap.report import _error_estimate
+    from safeswap.monitor.report import _error_estimate
 
     ev = pd.DataFrame(
         {

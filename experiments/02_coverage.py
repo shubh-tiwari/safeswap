@@ -11,10 +11,11 @@ import argparse
 import numpy as np
 import pandas as pd
 
-from safeswap import estimators as est
-from safeswap import monitor, policies
-from safeswap.data import load_routerbench
-from safeswap.report import _error_estimate
+from safeswap.data.routerbench import load_routerbench
+from safeswap.monitor import runner as monitor
+from safeswap.monitor.report import _error_estimate
+from safeswap.routing import policies
+from safeswap.stats import estimators as est
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--sims", type=int, default=300)

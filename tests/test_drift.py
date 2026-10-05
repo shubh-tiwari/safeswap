@@ -1,6 +1,6 @@
 import numpy as np
 
-from safeswap import drift
+from safeswap.stats import drift
 
 
 def _labels(rate, windows, per, rng):

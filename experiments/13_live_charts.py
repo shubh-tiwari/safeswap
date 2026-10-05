@@ -10,14 +10,14 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import yaml
 
-from safeswap.data import load_routerbench
-from safeswap.estimators import clopper_pearson
+from safeswap.data.routerbench import load_routerbench
+from safeswap.stats.estimators import clopper_pearson
 
 OUT = Path("docs/img")
 OUT.mkdir(parents=True, exist_ok=True)
-run = sorted(glob.glob("runs/live-300-*"))[-1]
+run = max(glob.glob("runs/live-300-*"))
 ev = pd.read_parquet(f"{run}/events.parquet")
-cfg = yaml.safe_load(open(f"{run}/config.yaml"))
+cfg = yaml.safe_load(Path(f"{run}/config.yaml").read_text())
 df = load_routerbench(seed=cfg["seed"], mix=cfg["dataset"]["mix"]).set_index("id")
 ev["mc"] = ev["request_id"].map(
     df["prompt"].str.contains("Print only a single choice", regex=False)

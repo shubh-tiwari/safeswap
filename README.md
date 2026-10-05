@@ -15,6 +15,24 @@ cost:               -92%  (with 3% of answers checked)
 It can also pick a routing threshold that stays under an error budget, and alert you when quality
 drops later.
 
+## Swap report
+
+Replay logged requests through a candidate model and get a ship / hold / rollback / split
+verdict, with a breakdown by slice:
+
+```bash
+safeswap replay --logs traces.jsonl --candidate qwen/qwen3-30b-a3b-instruct-2507 \
+    --judge google/gemini-3.6-flash --policy examples/policy.yaml
+safeswap report runs/replay-<time> --open
+```
+
+![Swap report](docs/img/report.png)
+
+Logs can be sessions with full turn history or OpenAI-style `{"messages": ..., "response": ...}`
+lines; each turn keeps its real history and only the candidate's reply is new.
+`safeswap fetch wildchat` downloads real conversations to try it on. The report above was
+rebuilt from the cached 300-prompt live test with `--cache-only`, so it cost nothing to produce.
+
 ## How it works
 
 1. **Serve.** Each request goes to the cheap or the expensive model, depending on your setup
@@ -112,8 +130,17 @@ The `experiments/` folder also has standalone scripts, e.g.
 
 ## Code
 
-- `estimators.py`: error rate and confidence range from the sampled requests
-- `calibrate.py`: threshold selection under an error budget
-- `drift.py`: quality-drop detection
-- `monitor.py`, `report.py`: running and reporting
-- `policies.py`, `judge.py`, `backends.py`: routers, judge, API client
+```
+src/safeswap/
+  data/      traces, WildChat and RouterBench loaders, run export
+  llm/       OpenRouter client (exact cost, spend cap, cache-only mode), call cache
+  scoring/   pairwise judge, deterministic checks
+  stats/     estimators, paired comparisons, sampling, drift, calibration
+  routing/   routers under test and their features
+  monitor/   estimate realised error from a shadowed sample
+  replay/    replay engine, analysis, decision policy, text/JSON/HTML reports
+```
+
+Data: [RouterBench](https://huggingface.co/datasets/withmartian/routerbench) and
+[WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M) (ODC-BY) are downloaded at
+runtime and not included here.

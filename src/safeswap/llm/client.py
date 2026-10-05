@@ -17,13 +17,17 @@ from typing import Any
 
 import httpx
 
-from .callcache import CallCache, key
+from safeswap.llm.cache import CallCache, key
 
 URL = "https://openrouter.ai/api/v1/chat/completions"
 
 
 class SpendCapExceeded(RuntimeError):
     pass
+
+
+class CacheMiss(RuntimeError):
+    """Raised in cache-only mode when a call isn't in the cache (no network call is made)."""
 
 
 @dataclass
@@ -46,6 +50,7 @@ class OpenRouter:
         spend_cap_usd: float = 5.0,
         timeout: float = 120.0,
         retries: int = 3,
+        cache_only: bool = False,
     ):
         self._key = api_key or os.environ.get("OPENROUTER_API_KEY")
         self.cache = cache if cache is not None else CallCache()
@@ -54,6 +59,7 @@ class OpenRouter:
         self._spend_lock = threading.Lock()
         self.timeout = timeout
         self.retries = retries
+        self.cache_only = cache_only  # replay from cache only: zero network calls, zero spend
         self._http: httpx.Client | None = None
 
     def _client(self) -> httpx.Client:
@@ -83,6 +89,8 @@ class OpenRouter:
         hit = self.cache.get(k)
         if hit is not None:
             return Completion(**{**hit, "cached": True})
+        if self.cache_only:
+            raise CacheMiss(f"{model}: call not in cache (cache-only mode)")
         if self.spent_usd >= self.spend_cap_usd:  # checked before each call; can overshoot by
             # at most the calls already in flight
             raise SpendCapExceeded(

@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from . import estimators as est
+from safeswap.stats import estimators as est
 
 
 def cusum_step(s: float, labels, p0: float, p1: float) -> tuple[float, float]:

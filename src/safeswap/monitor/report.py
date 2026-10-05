@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from . import estimators as est
+from safeswap.stats import estimators as est
 
 
 def _census(ev: pd.DataFrame) -> pd.Series:

@@ -15,10 +15,10 @@ from pathlib import Path
 import pandas as pd
 from dotenv import load_dotenv
 
-from safeswap.backends import OpenRouter, SpendCapExceeded
-from safeswap.data import load_routerbench
-from safeswap.estimators import clopper_pearson
-from safeswap.judge import LLMJudge
+from safeswap.data.routerbench import load_routerbench
+from safeswap.llm.client import OpenRouter, SpendCapExceeded
+from safeswap.scoring.judge import LLMJudge
+from safeswap.stats.estimators import clopper_pearson
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--n", type=int, default=50)

@@ -5,11 +5,11 @@ import threading
 import numpy as np
 import pandas as pd
 
-from safeswap.backends import Completion, SpendCapExceeded
-from safeswap.judge import LLMJudge
-from safeswap.monitor import run_live
-from safeswap.policies import Decision
-from safeswap.report import summarize
+from safeswap.llm.client import Completion, SpendCapExceeded
+from safeswap.monitor.report import summarize
+from safeswap.monitor.runner import run_live
+from safeswap.routing.policies import Decision
+from safeswap.scoring.judge import LLMJudge
 
 
 class FakeClient:

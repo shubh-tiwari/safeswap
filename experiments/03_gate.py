@@ -13,8 +13,8 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import roc_auc_score
 
-from safeswap import policies
-from safeswap.data import load_routerbench
+from safeswap.data.routerbench import load_routerbench
+from safeswap.routing import policies
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--features", default="tfidf")
